@@ -3,9 +3,13 @@ from diffusers.utils import pt_to_pil
 import torch
 import gc
 import torch
+import argparse
 
-
-prompt="Abstract pencil and watercolor art of  Florian, a young boy with a golden donkey standing under a tree in a magical forest."
+parser = argparse.ArgumentParser(
+                    prog='IF_image_generator')
+parser.add_argument('prompt')  
+args = parser.parse_args()
+prompt=args.prompt #"Abstract pencil and watercolor art of  Florian, a young boy with a golden donkey standing under a tree in a magical forest."
 
 
 def flush():
@@ -26,8 +30,8 @@ stage_2 = DiffusionPipeline.from_pretrained(
 stage_2.enable_model_cpu_offload()
 
 # stage 3
-safety_modules = {"feature_extractor": stage_1.feature_extractor, "safety_checker": stage_1.safety_checker, "watermarker": stage_1.watermarker}
-stage_3 = DiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-x4-upscaler", **safety_modules, torch_dtype=torch.float16)
+#safety_modules = {"feature_extractor": stage_1.feature_extractor, "safety_checker": stage_1.safety_checker, "watermarker": stage_1.watermarker}
+stage_3 = DiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-x4-upscaler", torch_dtype=torch.float16)
 #stage_3.enable_xformers_memory_efficient_attention()  # remove line if torch.__version__ >= 2.0.0
 stage_3.enable_model_cpu_offload()
 
